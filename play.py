@@ -11,7 +11,13 @@ from story.utils import *
 from playsound import playsound
 
 os.environ["TF_CPP_MIN_LOG_LEVEL"] = "3"
-
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument('--gpus', nargs="+", default=["0"], help="which GPUs to run on, e.g. \"0 1 2\"")
+args = parser.parse_args()
+visible_devices = ",".join(args.gpus)
+os.environ["CUDA_VISIBLE_DEVICES"] = visible_devices
+print("running on gpus", visible_devices)
 
 def splash():
     print("0) New Game\n1) Load Game\n")
