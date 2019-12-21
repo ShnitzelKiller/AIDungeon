@@ -112,15 +112,26 @@ def split_first_sentence(text):
     return text[0:split_point], text[split_point:]
 
 
+def is_in_quotes(text, query):
+    text = text
+    query = query
+    ind = text.find(query)
+    if ind < 0:
+        return True
+    else:
+        num_quotes = text[:ind].count('"')
+        return num_quotes % 2 != 0
+
+
 def cut_trailing_action(text):
     lines = text.rstrip().split("\n")
-    last_para = re.findall(r".+?(?:\.{1,3}|[!\?]|$)(?!\")", lines[-1])
+    last_para = re.findall(r".+?(?:\.{1,3}|[!\?]|$)", lines[-1])
     if len(last_para) < 1:
         return ""
     last_line = last_para[-1].rstrip()
     if (
-        "you ask" in last_line.lower()
-        or "you say" in last_line.lower()
+        not is_in_quotes(last_line.lower(), "you ask") or
+        not is_in_quotes(last_line.lower(), "you say")
     ) and len(lines) > 1:
         if len(last_para) > 1:
             last_para = last_para[:-1]
